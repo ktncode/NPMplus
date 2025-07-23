@@ -162,7 +162,16 @@
 		"disable-crowdsec": "CrowdSec für diesen Host deaktivieren",
 		"disable-crowdsec-help": "Wenn aktiviert, wird der CrowdSec-Schutz für diesen spezifischen Proxy-Host deaktiviert (erfordert, dass CrowdSec server-weit aktiviert ist)",
 		"use-default-page": "Standard-Seite verwenden",
-		"use-default-page-help": "Die konfigurierte Standard-Site-Seite anstelle einer Weiterleitung an das Backend anzeigen"
+		"use-default-page-help": "Die konfigurierte Standard-Site-Seite anstelle einer Weiterleitung an das Backend anzeigen",
+		"listen-ips": "Listen IPs",
+		"listen-ips-help": "Wählen Sie aus, auf welchen globalen IP-Adressen dieser Proxy-Host lauschen soll. Leer lassen, um auf allen Schnittstellen zu lauschen.",
+		"listen-ips-multiple-help": "Halten Sie Strg (Windows/Linux) oder Cmd (Mac) gedrückt, um mehrere IPs auszuwählen.",
+		"detect-global-ips": "Globale IPs erkennen",
+		"detecting-ips": "Erkenne...",
+		"available-global-ips": "Verfügbare globale IPs",
+		"ip-restriction-notice": "Ihre Benutzerberechtigung beschränkt, welche IPs Sie auswählen können.",
+		"select-all": "Alle auswählen",
+		"clear-all": "Alle löschen"
 	},
 	"redirection-hosts": {
 		"add": "Weiterleitungs-Host hinzufügen",
@@ -314,6 +323,8 @@
 		"perms-visibility-user": "Nur erstellte Einträge",
 		"search": "Benutzer:in suchen...",
 		"sign-in-as": "Als Benutzer:in anmelden",
-		"title": "Benutzer:in"
+		"title": "Benutzer:in",
+		"allowed-listen-ips": "Erlaubte Listen-IPs",
+		"allowed-listen-ips-help": "Wählen Sie, welche IP-Adressen dieser Benutzer für die Proxy-Host-Listen-Konfiguration verwenden kann. Leer lassen, um alle IPs zu erlauben."
 	}
 }

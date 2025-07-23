@@ -32,6 +32,11 @@ class ProxyHost extends Model {
 		if (typeof this.use_default_page === 'undefined') {
 			this.use_default_page = false;
 		}
+
+		// Default for listen_ips
+		if (typeof this.listen_ips === 'undefined') {
+			this.listen_ips = [];
+		}
 	}
 
 	$beforeUpdate() {
@@ -57,7 +62,7 @@ class ProxyHost extends Model {
 	}
 
 	static get jsonAttributes() {
-		return ['domain_names', 'meta', 'locations'];
+		return ['domain_names', 'meta', 'locations', 'listen_ips'];
 	}
 
 	static get relationMappings() {

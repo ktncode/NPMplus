@@ -109,6 +109,43 @@
                             </div>
                         </div>
                         <% } %>
+
+                        <!-- Listen IPs -->
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <label class="form-label"><%- i18n('proxy-hosts', 'listen-ips') %></label>
+                                <div class="listen-ips-container">
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <button type="button" class="btn btn-secondary detect-global-ips">
+                                                <i class="fe fe-search"></i> <%- i18n('proxy-hosts', 'detect-global-ips') %>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="available-ips-container" style="display: none;">
+                                        <div class="alert alert-info">
+                                            <strong><%- i18n('proxy-hosts', 'available-global-ips') %>:</strong>
+                                            <div class="available-ips-list mt-2"></div>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-sm btn-outline-primary select-all-ips"><%- i18n('proxy-hosts', 'select-all') %></button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary clear-all-ips"><%- i18n('proxy-hosts', 'clear-all') %></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="selected-ips-container">
+                                        <div class="form-group">
+                                            <select name="listen_ips" class="form-control" multiple style="min-height: 120px;">
+                                                <!-- Options will be populated by JavaScript -->
+                                            </select>
+                                            <small class="form-hint">
+                                                <%- i18n('proxy-hosts', 'listen-ips-help') %><br>
+                                                <strong><%- i18n('proxy-hosts', 'listen-ips-multiple-help') %></strong>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -162,7 +162,16 @@
 		"disable-crowdsec": "Disabilita CrowdSec per questo host",
 		"disable-crowdsec-help": "Quando abilitato, la protezione CrowdSec sarà disabilitata per questo specifico proxy host (richiede che CrowdSec sia abilitato a livello server)",
 		"use-default-page": "Usa pagina predefinita",
-		"use-default-page-help": "Mostra la pagina Default Site configurata invece di effettuare il proxy al backend"
+		"use-default-page-help": "Mostra la pagina Default Site configurata invece di effettuare il proxy al backend",
+		"listen-ips": "IP di ascolto",
+		"listen-ips-help": "Seleziona su quali indirizzi IP globali questo proxy host dovrebbe ascoltare. Lascia vuoto per ascoltare su tutte le interfacce.",
+		"detect-global-ips": "Rileva IP globali",
+		"detecting-ips": "Rilevamento...",
+		"available-global-ips": "IP globali disponibili",
+		"ip-restriction-notice": "Le tue autorizzazioni utente limitano quali IP puoi selezionare.",
+		"select-all": "Seleziona tutto",
+		"clear-all": "Cancella tutto",
+		"listen-ips-multiple-help": "Tieni premuto Ctrl (Windows/Linux) o Cmd (Mac) per selezionare più IP."
 	},
 	"redirection-hosts": {
 		"add": "Crea host di reindirizzamento",
@@ -316,6 +325,8 @@
 		"perms-visibility-user": "Solo gli elementi creati",
 		"search": "Cerca utente…",
 		"sign-in-as": "Accedi come utente",
-		"title": "Utenti"
+		"title": "Utenti",
+		"allowed-listen-ips": "IP di ascolto consentiti",
+		"allowed-listen-ips-help": "Seleziona quali indirizzi IP questo utente può utilizzare per la configurazione di ascolto del proxy host. Lascia vuoto per consentire tutti gli IP."
 	}
 }

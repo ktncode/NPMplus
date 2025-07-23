@@ -50,7 +50,13 @@ module.exports = Mn.View.extend({
         log_retention_days:       'input[name="log_retention_days"]',
         letsencrypt:              '.letsencrypt',
         crowdsec_disabled:        'input[name="crowdsec_disabled"]',
-        use_default_page:         'input[name="use_default_page"]'
+        use_default_page:         'input[name="use_default_page"]',
+        detect_global_ips_btn:    'button.detect-global-ips',
+        listen_ips_select:        'select[name="listen_ips"]',
+        available_ips_container:  '.available-ips-container',
+        available_ips_list:       '.available-ips-list',
+        select_all_ips_btn:       'button.select-all-ips',
+        clear_all_ips_btn:        'button.clear-all-ips'
     },
 
     regions: {
@@ -146,6 +152,21 @@ module.exports = Mn.View.extend({
             this.locationsCollection.add(model);
         },
 
+        'click @ui.detect_global_ips_btn': function (e) {
+            e.preventDefault();
+            this.detectGlobalIPs();
+        },
+
+        'click @ui.select_all_ips_btn': function (e) {
+            e.preventDefault();
+            this.ui.listen_ips_select.find('option').prop('selected', true);
+        },
+
+        'click @ui.clear_all_ips_btn': function (e) {
+            e.preventDefault();
+            this.ui.listen_ips_select.find('option').prop('selected', false);
+        },
+
         'click @ui.save': function (e) {
             e.preventDefault();
             this.ui.le_error_info.hide();
@@ -181,6 +202,13 @@ module.exports = Mn.View.extend({
             data.log_retention_days      = parseInt(data.log_retention_days, 10) || 30;
             data.crowdsec_disabled       = !!data.crowdsec_disabled;
             data.use_default_page        = !!data.use_default_page;
+
+            // Handle listen_ips
+            if (data.listen_ips && typeof data.listen_ips === 'string') {
+                data.listen_ips = [data.listen_ips];
+            } else if (!data.listen_ips) {
+                data.listen_ips = null;
+            }
 
             if (typeof data.meta === 'undefined') data.meta = {};
             data.meta.letsencrypt_agree = data.meta.letsencrypt_agree == 1;
@@ -360,6 +388,92 @@ module.exports = Mn.View.extend({
             options.model.attributes.locations.forEach((location) => {
                 let m = new ProxyLocationModel.Model(location);
                 this.locationsCollection.add(m);
+            });
+        }
+    },
+
+    detectGlobalIPs: function() {
+        const view = this;
+        const btn = this.ui.detect_global_ips_btn;
+        
+        // Show loading state
+        btn.prop('disabled', true).html('<i class="fe fe-loader"></i> ' + i18n('proxy-hosts', 'detecting-ips'));
+        
+        App.Api.Nginx.getGlobalIPs()
+            .then(response => {
+                if (response && response.global_ips && response.global_ips.length > 0) {
+                    view.populateListenIPs(response.global_ips, response.allowed_ips);
+                    view.ui.available_ips_container.show();
+                } else {
+                    App.UI.showAlert('No global IPs detected', 'warning');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                App.UI.showAlert('Failed to detect global IPs: ' + (err.message || err), 'danger');
+            })
+            .finally(() => {
+                btn.prop('disabled', false).html('<i class="fe fe-search"></i> ' + i18n('proxy-hosts', 'detect-global-ips'));
+            });
+    },
+
+    populateListenIPs: function(globalIPs, allowedIPs) {
+        const view = this;
+        const select = this.ui.listen_ips_select;
+        const listContainer = this.ui.available_ips_list;
+        
+        // Clear existing options and list
+        select.empty();
+        listContainer.empty();
+        
+        // Use filtered IPs from backend (already filtered by user permissions)
+        const availableIPs = globalIPs;
+        
+        // Group IPs by family for better display
+        const ipv4List = [];
+        const ipv6List = [];
+        
+        availableIPs.forEach(ip => {
+            const ipStr = typeof ip === 'object' ? ip.address : ip;
+            const family = typeof ip === 'object' ? ip.family : (ipStr.includes(':') ? 'IPv6' : 'IPv4');
+            const interfaceName = typeof ip === 'object' ? ip.interface : '';
+            
+            if (family === 'IPv6') {
+                ipv6List.push({address: ipStr, interface: interfaceName});
+            } else {
+                ipv4List.push({address: ipStr, interface: interfaceName});
+            }
+        });
+        
+        // Add options to select and display list
+        if (ipv4List.length > 0) {
+            listContainer.append('<div class="mb-1"><strong>IPv4:</strong></div>');
+            ipv4List.forEach(ip => {
+                const displayText = ip.interface ? `${ip.address} (${ip.interface})` : ip.address;
+                select.append(`<option value="${ip.address}">${displayText}</option>`);
+                listContainer.append(`<span class="badge badge-primary mr-1 mb-1" title="${ip.interface}">${ip.address}</span>`);
+            });
+        }
+        
+        if (ipv6List.length > 0) {
+            listContainer.append('<div class="mb-1 mt-2"><strong>IPv6:</strong></div>');
+            ipv6List.forEach(ip => {
+                const displayText = ip.interface ? `${ip.address} (${ip.interface})` : ip.address;
+                select.append(`<option value="${ip.address}">${displayText}</option>`);
+                listContainer.append(`<span class="badge badge-info mr-1 mb-1" title="${ip.interface}">${ip.address}</span>`);
+            });
+        }
+        
+        // Show restriction message if user has IP restrictions
+        if (allowedIPs && allowedIPs.length > 0 && !allowedIPs.includes('*')) {
+            listContainer.append(`<br><small class="text-muted">${i18n('proxy-hosts', 'ip-restriction-notice')}</small>`);
+        }
+        
+        // Set current values if editing
+        const currentIPs = this.model.get('listen_ips');
+        if (currentIPs && Array.isArray(currentIPs)) {
+            currentIPs.forEach(ip => {
+                select.find(`option[value="${ip}"]`).prop('selected', true);
             });
         }
     }

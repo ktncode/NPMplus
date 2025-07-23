@@ -326,6 +326,12 @@ module.exports = {
     },
 
     Nginx: {
+        /**
+         * @returns {Promise}
+         */
+        getGlobalIPs: function () {
+            return fetch('get', 'nginx/ip-detection');
+        },
 
         ProxyHosts: {
             /**

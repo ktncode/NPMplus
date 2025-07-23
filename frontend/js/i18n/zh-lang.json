@@ -162,7 +162,16 @@
 		"disable-crowdsec": "为此主机禁用 CrowdSec",
 		"disable-crowdsec-help": "启用后，将为此特定代理主机禁用 CrowdSec 保护（需要在服务器级别启用 CrowdSec）",
 		"use-default-page": "使用默认页面",
-		"use-default-page-help": "显示配置的默认站点页面而不是代理到后端"
+		"use-default-page-help": "显示配置的默认站点页面而不是代理到后端",
+		"listen-ips": "监听IP",
+		"listen-ips-help": "选择此代理主机应监听的全局IP地址。留空表示监听所有接口。",
+		"listen-ips-multiple-help": "按住Ctrl（Windows/Linux）或Cmd（Mac）选择多个IP。",
+		"detect-global-ips": "检测全局IP",
+		"detecting-ips": "检测中...",
+		"available-global-ips": "可用的全局IP",
+		"ip-restriction-notice": "您的用户权限限制了可以选择的IP。",
+		"select-all": "全选",
+		"clear-all": "清除全部"
 	},
 	"redirection-hosts": {
 		"add": "添加重定向",
@@ -316,6 +325,8 @@
 		"perms-visibility-user": "仅创建的项目",
 		"search": "搜索用户…",
 		"sign-in-as": "以用户身份登录",
-		"title": "用户"
+		"title": "用户",
+		"allowed-listen-ips": "允许的监听IP",
+		"allowed-listen-ips-help": "选择此用户可以用于代理主机监听配置的IP地址。留空表示允许所有IP。"
 	}
 }

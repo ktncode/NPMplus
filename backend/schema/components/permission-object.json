@@ -72,6 +72,15 @@
 				"view",
 				"manage"
 			]
+		},
+		"allowed_listen_ips": {
+			"type": ["array", "null"],
+			"description": "IP addresses this user is allowed to use for listen_ips in proxy hosts",
+			"items": {
+				"type": "string",
+				"pattern": "^(((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.){3}(25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d))$|^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::1$|^::$|^\\*$"
+			},
+			"default": null
 		}
 	}
 }

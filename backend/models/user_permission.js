@@ -11,6 +11,11 @@ class UserPermission extends Model {
 	$beforeInsert() {
 		this.created_on = now();
 		this.modified_on = now();
+
+		// Default for allowed_listen_ips
+		if (typeof this.allowed_listen_ips === 'undefined') {
+			this.allowed_listen_ips = [];
+		}
 	}
 
 	$beforeUpdate() {
@@ -23,6 +28,10 @@ class UserPermission extends Model {
 
 	static get tableName() {
 		return 'user_permission';
+	}
+
+	static get jsonAttributes() {
+		return ['allowed_listen_ips'];
 	}
 }
 

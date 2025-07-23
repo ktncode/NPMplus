@@ -477,6 +477,35 @@ const internalUser = {
 				return internalToken.getTokenFromUser(user);
 			});
 	},
+
+	/**
+	 * @param {Integer} user_id
+	 * @returns {Promise}
+	 */
+	getUserPermissions: (user_id) => {
+		return userPermissionModel
+			.query()
+			.where('user_id', user_id)
+			.first()
+			.then((permissions) => {
+				if (!permissions) {
+					// Return default permissions if none exist
+					return {
+						user_id: user_id,
+						visibility: 'user',
+						access_lists: 'hidden',
+						dead_hosts: 'hidden',
+						proxy_hosts: 'hidden',
+						redirection_hosts: 'hidden',
+						streams: 'hidden',
+						certificates: 'hidden',
+						acme_servers: 'hidden',
+						allowed_listen_ips: null,
+					};
+				}
+				return permissions;
+			});
+	},
 };
 
 module.exports = internalUser;

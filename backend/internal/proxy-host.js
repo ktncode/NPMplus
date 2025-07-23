@@ -7,6 +7,7 @@ const internalNginx = require('./nginx');
 const internalAuditLog = require('./audit-log');
 const internalCertificate = require('./certificate');
 const internalDomainLog = require('./domain-log');
+const internalUser = require('./user');
 const { castJsonIfNeed } = require('../lib/helpers');
 
 function omissions() {
@@ -28,6 +29,23 @@ const internalProxyHost = {
 
 		return access
 			.can('proxy_hosts:create', data)
+			.then(() => {
+				// Check listen_ips permissions
+				if (data.listen_ips && data.listen_ips.length > 0) {
+					return internalUser.getUserPermissions(access.token.getUserId()).then((userPermissions) => {
+						const allowedIps = userPermissions.allowed_listen_ips;
+						// If allowedIps is null/empty, allow all IPs (no restrictions)
+						if (allowedIps && allowedIps.length > 0) {
+							// Check if all requested IPs are allowed
+							const unauthorizedIps = data.listen_ips.filter((ip) => !allowedIps.includes(ip) && !allowedIps.includes('*'));
+							if (unauthorizedIps.length > 0) {
+								throw new error.ValidationError(`You are not authorized to use these IP addresses: ${unauthorizedIps.join(', ')}`);
+							}
+						}
+						// If allowedIps is null/empty, no restrictions apply (all IPs allowed)
+					});
+				}
+			})
 			.then(() => {
 				// Get a list of the domain names and check each of them against existing records
 				const domain_name_check_promises = [];
@@ -131,6 +149,23 @@ const internalProxyHost = {
 		return access
 			.can('proxy_hosts:update', data.id)
 			.then((/* access_data */) => {
+				// Check listen_ips permissions
+				if (data.listen_ips && data.listen_ips.length > 0) {
+					return internalUser.getUserPermissions(access.token.getUserId()).then((userPermissions) => {
+						const allowedIps = userPermissions.allowed_listen_ips;
+						// If allowedIps is null/empty, allow all IPs (no restrictions)
+						if (allowedIps && allowedIps.length > 0) {
+							// Check if all requested IPs are allowed
+							const unauthorizedIps = data.listen_ips.filter((ip) => !allowedIps.includes(ip) && !allowedIps.includes('*'));
+							if (unauthorizedIps.length > 0) {
+								throw new error.ValidationError(`You are not authorized to use these IP addresses: ${unauthorizedIps.join(', ')}`);
+							}
+						}
+						// If allowedIps is null/empty, no restrictions apply (all IPs allowed)
+					});
+				}
+			})
+			.then(() => {
 				// Get a list of the domain names and check each of them against existing records
 				const domain_name_check_promises = [];
 
