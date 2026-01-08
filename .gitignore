@@ -5,3 +5,6 @@
 .vscode
 certbot-help.txt
 */node_modules
+
+# Build artifacts
+frontend/webpack_stats.html
